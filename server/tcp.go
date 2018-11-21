@@ -13,14 +13,19 @@ import (
 
 const defaultServerPort = "5311"
 
-func CreateTCPServer() net.Listener {
+func getServerPort() string {
 	var serverPort string
 	if serverPort = os.Getenv("SERVER_PORT"); serverPort == "" {
 		serverPort = defaultServerPort
 	}
-	server, err := net.Listen("tcp", fmt.Sprintf(":%v", serverPort))
+	return serverPort
+}
+
+func CreateTCPServer() net.Listener {
+
+	server, err := net.Listen("tcp", fmt.Sprintf(":%v", getServerPort()))
 	if err != nil {
-		log.Fatalf("Can't listen TCP port %v: %v", serverPort, err.Error())
+		log.Fatalf("Can't listen TCP port: %v", err.Error())
 	}
 	return server
 }

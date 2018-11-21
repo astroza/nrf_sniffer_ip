@@ -4,14 +4,18 @@ package main
 
 import (
 	"log"
+	"net"
 
 	"github.com/astroza/nrf_sniffer_ip/serial"
 	"github.com/astroza/nrf_sniffer_ip/server"
 )
 
 func main() {
+	announcer := server.Announcer{}
+	announcer.Init()
 	listener := server.CreateTCPServer()
 	for {
+		announcer.Run <- true
 		clientConn, err := server.WaitForAClient(listener)
 		if err != nil {
 			log.Printf("Can't accept a new client: %v", err)
@@ -20,6 +24,7 @@ func main() {
 		if err != nil {
 			log.Fatalf("Can't open serial port: %v", err)
 		}
+		announcer.Run <- false
 	clientLoop:
 		for {
 			select {
@@ -36,6 +41,8 @@ func main() {
 				}
 			case err := <-clientConn.Error:
 				log.Println(err)
+				conn := clientConn.Handle.(net.Conn)
+				conn.Close()
 				break clientLoop
 			case err := <-serialPort.Error:
 				log.Fatal(err)

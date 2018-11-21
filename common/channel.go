@@ -2,7 +2,9 @@
  */
 package common
 
-import "io"
+import (
+	"io"
+)
 
 type ReadWriterChannel struct {
 	In       chan []byte
@@ -13,6 +15,7 @@ type ReadWriterChannel struct {
 
 func (r *ReadWriterChannel) Init(handle io.ReadWriter) {
 	r.In = make(chan []byte)
+	r.Error = make(chan error)
 	r.inBuffer = make([]byte, 4096)
 	r.Handle = handle
 	go func(reader io.Reader) {
