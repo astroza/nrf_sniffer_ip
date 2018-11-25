@@ -1,0 +1,14 @@
+[Unit]
+Description=nRF Sniffer Server
+After=dhcpcd.service
+
+[Service]
+Type=simple
+Environment=SERIAL_DEVICE=/dev/ttyAMA0
+User=root
+WorkingDirectory=/home/pi
+ExecStart=/home/pi/go/bin/nrf_sniffer_server
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

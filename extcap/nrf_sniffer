@@ -1,0 +1,4 @@
+#!/bin/bash
+
+echo "$@" >> /tmp/cmd
+python /usr/lib/x86_64-linux-gnu/wireshark/extcap/nrf_sniffer.py $@
